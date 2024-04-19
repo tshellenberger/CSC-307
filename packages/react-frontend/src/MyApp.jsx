@@ -17,9 +17,48 @@ function MyApp() {
     setCharacters(updated);
   }
 
+  function deleteCharacter(person) {
+    deleteUser(characters[person])
+      .then((res) => res.status == 204 ? removeOneCharacter(person) : undefined)
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+
+  function deleteUser(person) {
+    const promise = fetch(`Http://localhost:8000/users/${person.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(person),
+    });
+    return promise;
+  }
+
+    /*
   function updateList(person) { 
     postUser(person)
       .then(() => setCharacters([...characters, person]))
+      .catch((error) => {
+        console.log(error);
+      })
+  }*/
+
+/*    
+  function updateList(person) { 
+    postUser(person)
+      .then((res) => res.status == 201 ? setCharacters([...characters, person]) : undefined)
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+  */
+
+  function updateList(person) { 
+    postUser(person)
+      .then((res) => res.status == 201 ? res.json() : undefined)
+      .then((json) =>{ if (json) setCharacters([...characters, json]);})
       .catch((error) => {
         console.log(error);
       })
@@ -30,12 +69,24 @@ function MyApp() {
     return promise;
   }
 
+
   useEffect(() => {
     fetchUsers()
 	      .then((res) => res.json())
 	      .then((json) => setCharacters(json["users_list"]))
 	      .catch((error) => { console.log(error); });
   }, [] );
+
+
+    /*
+  useEffect(() => {
+    fetchUsers()
+	      .then((res) => res.status == 201 ?
+              res.json() : undefined
+          ).then((json) => setCharacters(json["users_list"]))
+	      .catch((error) => { console.log(error); });
+  }, [] );
+  */
 
   function postUser(person) {
     const promise = fetch("Http://localhost:8000/users", {
@@ -46,6 +97,7 @@ function MyApp() {
       body: JSON.stringify(person),
     });
 
+
     return promise;
   }
 
@@ -53,7 +105,8 @@ function MyApp() {
     <div className="container">
       <Table
         characterData={characters}
-        removeCharacter={removeOneCharacter}
+        removeCharacter={deleteCharacter}
+        //removeCharacter={removeOneCharacter}
       />
 
 <Form handleSubmit={updateList} />

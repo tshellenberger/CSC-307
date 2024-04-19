@@ -57,6 +57,7 @@ app.get("/users", (req, res) => {
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 
+
 app.get("/users/:id", (req, res) => {
   const id = req.params["id"]; //or req.params.id
   let result = findUserById(id);
@@ -68,14 +69,36 @@ app.get("/users/:id", (req, res) => {
 });
 
 const addUser = (user) => {
+  genID(user);
   users["users_list"].push(user);
+  return user;
+};
+
+const genID = (user) => {
+  user.id = Math.random();
   return user;
 };
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
+  const newUser = addUser(userToAdd);
+  res.status(201).send(newUser);
+});
+
+const findUserDel = (id) => {
+  return users["users_list"].find(
+    (user) => user["id"] === id
+  );
+};
+
+const delUser = (id) => {
+  users["users_list"].splice(users["users_list"].indexOf(findUserDel(id)),1);
+};
+
+app.delete("/users/:id", (req, res) => {
+    const id = req.params["id"];
+    delUser(id);
+    res.status(204).send();
 });
 
 app.get("/", (req, res) => {
