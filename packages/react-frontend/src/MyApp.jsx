@@ -26,7 +26,7 @@ function MyApp() {
   }
 
   function deleteUser(person) {
-    const promise = fetch(`Http://localhost:8000/users/${person.id}`, {
+    const promise = fetch(`Http://localhost:8000/users/${person._id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -35,25 +35,6 @@ function MyApp() {
     });
     return promise;
   }
-
-    /*
-  function updateList(person) { 
-    postUser(person)
-      .then(() => setCharacters([...characters, person]))
-      .catch((error) => {
-        console.log(error);
-      })
-  }*/
-
-/*    
-  function updateList(person) { 
-    postUser(person)
-      .then((res) => res.status == 201 ? setCharacters([...characters, person]) : undefined)
-      .catch((error) => {
-        console.log(error);
-      })
-  }
-  */
 
   function updateList(person) { 
     postUser(person)
@@ -76,17 +57,6 @@ function MyApp() {
 	      .then((json) => setCharacters(json["users_list"]))
 	      .catch((error) => { console.log(error); });
   }, [] );
-
-
-    /*
-  useEffect(() => {
-    fetchUsers()
-	      .then((res) => res.status == 201 ?
-              res.json() : undefined
-          ).then((json) => setCharacters(json["users_list"]))
-	      .catch((error) => { console.log(error); });
-  }, [] );
-  */
 
   function postUser(person) {
     const promise = fetch("Http://localhost:8000/users", {
